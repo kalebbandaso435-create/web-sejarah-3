@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arsip Sang Pengamat: Kolonialisme & Imperialisme di Nusantara</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+        
+        .font-heading { font-family: 'Cinzel', serif; }
+        .font-body { font-family: 'Lora', serif; }
+
+        .parchment {
+            background-color: #fcf8f2;
+            background-image: radial-gradient(#e5dec9 0.75px, transparent 0.75px), radial-gradient(#e5dec9 0.75px, #fcf8f2 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e5dec9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #8c6d46;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="parchment font-body text-stone-900 min-h-screen flex flex-col justify-between">
+
+    <!-- Header / Banner -->
+    <header class="bg-stone-900 text-stone-100 py-6 px-4 shadow-xl border-b-4 border-amber-700">
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-4">
+            <div>
+                <span class="text-xs uppercase tracking-widest text-amber-500 font-semibold">Catatan Sang Pengamat Waktu</span>
+                <h1 class="font-heading text-2xl md:text-3xl font-bold tracking-wider text-amber-100">Jejak Kuasa & Nestapa Nusantara</h1>
+            </div>
+            <div id="quiz-status-header" class="flex items-center gap-3 hidden">
+                <div class="text-sm bg-stone-800 px-4 py-2 rounded border border-amber-600/50">
+                    Soal <span id="current-q-num">1</span> dari <span id="total-q-num">80</span>
+                </div>
+                <button onclick="confirmReset()" title="Reset Kuis / Ulangi dari Awal" class="bg-stone-800 hover:bg-amber-900 text-amber-200 p-2 rounded border border-amber-600/50 transition flex items-center justify-center">
+                    🔄 <span class="hidden sm:inline text-xs ml-1 font-semibold">Reset</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl w-full mx-auto px-4 py-8 flex-grow flex items-center justify-center">
+
+        <!-- Welcome View -->
+        <div id="view-welcome" class="bg-white/90 backdrop-blur shadow-2xl rounded-xl p-8 border border-stone-300 max-w-2xl w-full text-center">
+            <div class="inline-block p-3 bg-amber-100 rounded-full text-amber-800 mb-4 text-3xl">📜</div>
+            <h2 class="font-heading text-3xl font-bold text-stone-900 mb-3">Arsip Era Kolonial</h2>
+            <p class="text-stone-700 mb-6 leading-relaxed italic">
+                "Wahai pengelana waktu, selamat datang di ruang pengamatan sejarah. Anda diuji untuk menelaah kembali 80 babak kelam dan perubahan besar era kolonialisme serta imperialisme Barat di bumi Nusantara."
+            </p>
+            <div class="bg-amber-50 border-l-4 border-amber-600 p-4 mb-6 text-left text-sm text-stone-700">
+                <p class="font-semibold mb-1">Ketentuan Pengarsipan:</p>
+                <ul class="list-disc list-inside space-y-1">
+                    <li>Total 80 pertanyaan pilihan ganda (5 opsi jawaban).</li>
+                    <li>Dapat berpindah ke **soal sebelumnya / selanjutnya** secara bebas.</li>
+                    <li>Tersedia rincian **jumlah Benar, Salah, dan Belum Dijawab** pada hasil akhir.</li>
+                    <li>Tersedia tombol **Reset** untuk mengulang seluruh kuis kapan saja.</li>
+                </ul>
+            </div>
+            <button onclick="startQuiz()" class="font-heading uppercase tracking-wider bg-amber-800 hover:bg-amber-900 text-stone-100 font-bold px-8 py-3 rounded-lg shadow-lg transition transform hover:-translate-y-0.5">
+                Buka Arsip & Mulai Kuis
+            </button>
+        </div>
+
+        <!-- Quiz View -->
+        <div id="view-quiz" class="bg-white/95 backdrop-blur shadow-2xl rounded-xl p-6 md:p-8 border border-stone-300 max-w-3xl w-full hidden">
+            <!-- Progress Bar -->
+            <div class="w-full bg-stone-200 h-2 rounded-full mb-6 overflow-hidden">
+                <div id="progress-bar" class="bg-amber-700 h-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+
+            <!-- Question Card Header -->
+            <div class="flex justify-between items-center text-xs text-stone-500 uppercase tracking-widest font-heading mb-2">
+                <span>Kategori: Kolonialisme & Imperialisme</span>
+                <span>Nomor <span id="q-number-label">1</span> / 80</span>
+            </div>
+
+            <!-- Question Text -->
+            <h3 id="question-text" class="text-lg md:text-xl font-semibold text-stone-900 mb-6 leading-snug">
+                <!-- Pertanyaan dimuat di sini -->
+            </h3>
+
+            <!-- Options Container -->
+            <div id="options-container" class="space-y-3 mb-6">
+                <!-- Opsi dimuat di sini -->
+            </div>
+
+            <!-- Explanation Box -->
+            <div id="explanation-box" class="hidden bg-stone-100 border-l-4 border-amber-700 p-4 rounded mb-6 text-sm text-stone-800">
+                <p class="font-heading font-bold text-amber-900 mb-1">Catatan Pengamat:</p>
+                <p id="explanation-text"></p>
+            </div>
+
+            <!-- Navigation Buttons Container -->
+            <div class="flex justify-between items-center gap-4 pt-4 border-t border-stone-200">
+                <button id="prev-btn" onclick="prevQuestion()" class="font-heading uppercase tracking-wider bg-stone-200 hover:bg-stone-300 text-stone-800 font-bold px-5 py-2.5 rounded shadow transition flex items-center gap-2 text-sm disabled:opacity-40 disabled:cursor-not-allowed">
+                    &larr; Kembali
+                </button>
+                <button id="next-btn" onclick="nextQuestion()" class="font-heading uppercase tracking-wider bg-stone-900 hover:bg-stone-800 text-amber-100 font-bold px-6 py-2.5 rounded shadow transition flex items-center gap-2 text-sm">
+                    <span id="next-btn-text">Selanjutnya</span> &rarr;
+                </button>
+            </div>
+        </div>
+
+        <!-- Result View -->
+        <div id="view-result" class="bg-white/90 backdrop-blur shadow-2xl rounded-xl p-8 border border-stone-300 max-w-xl w-full text-center hidden">
+            <div class="inline-block p-4 bg-amber-100 rounded-full text-amber-800 mb-4 text-4xl">🏛️</div>
+            <h2 class="font-heading text-3xl font-bold text-stone-900 mb-2">Hasil Rincian Analisis</h2>
+            <p class="text-stone-600 mb-6">Anda telah meneliti seluruh arsip sejarah kolonial dan imperialisme Nusantara.</p>
+            
+            <!-- Ringkasan Nilai & Statistik Benar/Salah -->
+            <div class="bg-stone-50 border border-stone-200 rounded-lg p-6 mb-6">
+                <div class="text-4xl font-heading font-bold text-amber-800 mb-2" id="score-display">0 / 80</div>
+                <div class="text-xs text-stone-500 uppercase tracking-wider mb-6">Skor Akhir</div>
+
+                <!-- Indikator Benar, Salah, Kosong -->
+                <div class="grid grid-cols-3 gap-3 text-center border-t border-stone-200 pt-4">
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3">
+                        <div class="text-2xl font-bold text-emerald-700" id="correct-count">0</div>
+                        <div class="text-xs text-emerald-800 font-semibold uppercase mt-1">✓ Benar</div>
+                    </div>
+                    <div class="bg-rose-50 border border-rose-200 rounded-lg p-3">
+                        <div class="text-2xl font-bold text-rose-700" id="wrong-count">0</div>
+                        <div class="text-xs text-rose-800 font-semibold uppercase mt-1">✗ Salah</div>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                        <div class="text-2xl font-bold text-amber-700" id="unanswered-count">0</div>
+                        <div class="text-xs text-amber-800 font-semibold uppercase mt-1">− Kosong</div>
+                    </div>
+                </div>
+            </div>
+
+            <p id="result-message" class="text-stone-700 italic mb-8">
+                <!-- Pesan evaluasi akhir -->
+            </p>
+
+            <button onclick="startQuiz()" class="font-heading uppercase tracking-wider bg-amber-800 hover:bg-amber-900 text-stone-100 font-bold px-8 py-3 rounded-lg shadow-lg transition">
+                🔄 Ulangi Seluruh Kuis
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-400 py-4 text-center text-xs border-t border-stone-800">
+        <p>&copy; 2026 Arsip Pengamat Sejarah Nusantara. Seluruh hak cipta dilindungi.</p>
+    </footer>
+
+    <script>
+        const quizData = [
+            {
+                question: "Faktor utama yang mendorong bangsa-bangsa Eropa melakukan pelayaran samudra dan penjelajahan dunia pada abad ke-15 dan ke-16 dikenal dengan motivasi 3G. Apa arti dari semboyan tersebut?",
+                options: ["Gold, Gospel, Glory", "Government, Gold, Goods", "Geografi, Greatness, God", "Global, Growth, Glory", "Garrison, Gold, Gospel"],
+                correct: 0,
+                explanation: "Semboyan 3G merujuk pada Gold (mencari kekayaan/rempah), Gospel (menyebarkan agama Kristen), dan Glory (mencari kejayaan/wilayah kekuasaan)."
+            },
+            {
+                question: "Jatuhnya kota Konstantinopel ke tangan Kesultanan Turki Usmani pada tahun 1453 memberikan dampak langsung terhadap perdagangan rempah-rempah Eropa, yaitu...",
+                options: ["Harga rempah-rempah menjadi sangat murah", "Jalur perdagangan darat Laut Tengah ditutup bagi pedagang Kristen Eropa", "Pedagang Eropa bebas keluar masuk pelabuhan Konstantinopel", "Turki Usmani bekerja sama dengan Portugis", "Perdagangan rempah beralih sepenuhnya ke benua Amerika"],
+                correct: 1,
+                explanation: "Jatuhnya Konstantinopel membuat akses dagang Eropa terhambat, mendorong mereka menjelajahi jalur laut langsung ke sumber rempah."
+            },
+            {
+                question: "Tokoh penjelajah samudra asal Portugis yang pertama kali berhasil mencapai Tanjung Harapan di ujung selatan Afrika pada tahun 1488 adalah...",
+                options: ["Vasco da Gama", "Christopher Columbus", "Bartholomeus Dias", "Alfonso de Albuquerque", "Ferdinand Magellan"],
+                correct: 2,
+                explanation: "Bartholomeus Dias memimpin ekspedisi Portugis yang mencapai Tanjung Harapan pada tahun 1488."
+            },
+            {
+                question: "Pada tahun 1511, pasukan Portugis di bawah pimpinan Alfonso de Albuquerque berhasil menaklukkan sebuah pusat perdagangan strategis di Asia Tenggara, yaitu...",
+                options: ["Pelabuhan Sunda Kelapa", "Malaka", "Banten", "Ternate", "Makassar"],
+                correct: 1,
+                explanation: "Penaklukan Malaka tahun 1511 menandai dimulainya dominasi kolonial Portugis di kawasan Nusantara bagian barat."
+            },
+            {
+                question: "Kedatangan bangsa Belanda pertama kali di Nusantara dipimpin oleh Cornelis de Houtman pada tahun 1596. Di pelabuhan manakah armada mereka pertama kali berlabuh?",
+                options: ["Surabaya", "Semarang", "Banten", "Jayakarta", "Palembang"],
+                correct: 2,
+                explanation: "Armada Cornelis de Houtman tiba di pelabuhan Banten pada tahun 1596."
+            },
+            {
+                question: "Vereenigde Oostindische Compagnie (VOC) didirikan pada tanggal 20 Maret 1602 dengan tujuan utama...",
+                options: ["Membantu menyebarkan agama Protestan", "Menghindari persaingan tidak sehat sesama pedagang Belanda dan menandingi kekuatan dagang asing", "Mendirikan koloni otonom di tanah Jawa", "Membantu kerajaan lokal berperang", "Mengembangkan sektor pertanian modern"],
+                correct: 1,
+                explanation: "VOC didirikan untuk menyatukan para pedagang Belanda dan menghindari persaingan tidak sehat antar sesama mereka."
+            },
+            {
+                question: "Hak istimewa (octrooi) yang diberikan pemerintah Belanda kepada VOC meliputi kewenangan berikut, KECUALI...",
+                options: ["Hak mencetak dan mengedarkan uang sendiri", "Hak memiliki tentara dan mendirikan benteng", "Hak memonopoli perdagangan rempah", "Hak membubarkan kerajaan di Nusantara secara sepihak tanpa persetujuan Kerajaan Belanda", "Hak menyatakan perang dan perdamaian"],
+                correct: 3,
+                explanation: "Hak octrooi memberi kewenangan layaknya negara, namun tidak termasuk hak absolut untuk membubarkan kerajaan tanpa perhitungan politik."
+            },
+            {
+                question: "Gubernur Jenderal VOC pertama yang meletakkan dasar-dasar kekuasaan militer dan administratif VOC di Nusantara, serta memindahkan pusat kegiatan ke Batavia adalah...",
+                options: ["Pieter Both", "Jan Pieterszoon Coen", "Herman Willem Daendels", "Thomas Stamford Raffles", "Johannes van den Bosch"],
+                correct: 1,
+                explanation: "Jan Pieterszoon Coen (JP Coen) dikenal sebagai pendiri kota Batavia dan peletak dasar kekuasaan VOC."
+            },
+            {
+                question: "Kebijakan monopoli VOC yang mewajibkan rakyat Maluku menjual hasil rempah-rempah hanya kepada VOC dengan harga yang ditentukan disebut...",
+                options: ["Contingenten", "Verplichte Leverantie", "Eemstyden", "Hongi Tochten", "Extirpasi"],
+                correct: 1,
+                explanation: "Verplichte Leverantie adalah kewajiban penyerahan hasil bumi dengan harga yang telah ditentukan VOC."
+            },
+            {
+                question: "Untuk mencegah kelebihan produksi rempah-rempah yang dapat merusak harga pasar, VOC melakukan pemusnahan tanaman rempah di Maluku. Kebijakan ini dinamakan...",
+                options: ["Hongi Tochten", "Extirpasi", "Contingenten", "Preangerstelsel", "Landrente"],
+                correct: 1,
+                explanation: "Extirpasi adalah hak menebang atau memusnahkan pohon rempah-rempah agar pasokan tetap terjaga dan harga stabil di Eropa."
+            },
+            {
+                question: "Ekspedisi bersenjata dengan perahu kora-kora yang dilakukan VOC untuk mengawasi pelaksanaan monopoli dan menghukum penyelundup rempah di Maluku disebut...",
+                options: ["Hongi Tochten", "Ekspedisi Punitif", "Patroli Laut Jawa", "Verplichte Leverantie", "Stelsel"],
+                correct: 0,
+                explanation: "Hongi Tochten (pelayaran hongi) adalah patroli militer laut menggunakan perahu kora-kora di perairan Maluku."
+            },
+            {
+                question: "Faktor utama yang menyebabkan kebangkrutan dan kejatuhan VOC pada akhir abad ke-18 (1799) adalah...",
+                options: ["Serangan militer Mataram dan Banten", "Korupsi merajalela, biaya perang tinggi, dan beban utang", "Boikot internasional oleh Inggris dan Prancis", "Kerusakan total akibat letusan gunung berapi", "Kebijakan humanis para pejabat VOC"],
+                correct: 1,
+                explanation: "Korupsi internal yang masif serta besarnya biaya perang menumpas perlawanan lokal membawa VOC pada pembubaran 31 Desember 1799."
+            },
+            {
+                question: "Setelah VOC dibubarkan pada tahun 1799, wilayah Nusantara secara resmi berada di bawah kendali langsung pemerintah...",
+                options: ["Republik Prancis", "Kerajaan Inggris", "Pemerintahan Kerajaan/Republik Bataaf Belanda", "Kesultanan Turki Usmani", "Dewan Batavia"],
+                correct: 2,
+                explanation: "Seluruh wilayah aset VOC diambil alih oleh pemerintah Republik Bataaf (Belanda)."
+            },
+            {
+                question: "Gubernur Jenderal Herman Willem Daendels dikirim ke Jawa (1808-1811) dengan tugas utama untuk...",
+                options: ["Menerapkan ekonomi liberal", "Mempertahankan Pulau Jawa dari ancaman serangan militer Inggris", "Membangun perkebunan teh di Priangan", "Menyebarkan agama Kristen", "Melunasi utang VOC"],
+                correct: 1,
+                explanation: "Daendels diutus oleh Louis Napoleon untuk membentengi Pulau Jawa dari gempuran pasukan Inggris."
+            },
+            {
+                question: "Proyek infrastruktur paling terkenal dari masa pemerintahan Herman Willem Daendels yang membentang sepanjang Pulau Jawa dari Anyer hingga Panarukan adalah...",
+                options: ["Jalur Kereta Api Trans-Jawa", "Jalur Pos Raya (Grote Postweg)", "Terusan Selat Sunda", "Bendungan Jatiluhur", "Benteng Van Der Wijck"],
+                correct: 1,
+                explanation: "Grote Postweg dibangun sepanjang ±1.000 km untuk mempermudah mobilisasi militer dan pengiriman pos."
+            },
+            {
+                question: "Sistem kerja paksa tanpa upah yang diterapkan oleh Daendels dalam pembangunan jalan raya militer dikenal dengan istilah...",
+                options: ["Kulturstelsel", "Landrente", "Rodi", "Corvee", "Bloedhond"],
+                correct: 2,
+                explanation: "Kerja Rodi memakan puluhan ribu korban jiwa rakyat pribumi karena kerja berat tanpa fasilitas memadai."
+            },
+            {
+                question: "Inggris menguasai Hindia Belanda setelah Kapitulasi Tamiang/Tuntang (1811). Tokoh yang ditunjuk sebagai Letnan Gubernur Jenderal di Jawa adalah...",
+                options: ["Lord Minto", "Thomas Stamford Raffles", "John Crawfurd", "James Cook", "William Marsden"],
+                correct: 1,
+                explanation: "Thomas Stamford Raffles memimpin pemerintahan Inggris di Jawa dari tahun 1811 hingga 1816."
+            },
+            {
+                question: "Kebijakan ekonomi agraria terkenal yang diperkenalkan oleh Thomas Stamford Raffles di Jawa adalah...",
+                options: ["Sistem Tanam Paksa (Cultuurstelsel)", "Sistem Sewa Tanah (Landrente)", "Sistem Monopoli Dagang Total", "Sistem Ekonomi Liberal Terbuka", "Sistem Pertanian Kolektif"],
+                correct: 1,
+                explanation: "Landrente menetapkan bahwa tanah adalah milik pemerintah (negara), sehingga petani wajib membayar sewa atas garapannya."
+            },
+            {
+                question: "Salah satu penemuan ilmiah penting di bidang botani yang diabadikan dari nama Thomas Stamford Raffles di Sumatra adalah...",
+                options: ["Pohon Kina", "Bunga Rafflesia arnoldii", "Kebun Raya Bogor", "Buku History of Sumatra", "Fosil Manusia Purba"],
+                correct: 1,
+                explanation: "Raffles bersama Dr. Joseph Arnold menemukan bunga raksasa Rafflesia arnoldii di pedalaman Bengkulu."
+            },
+            {
+                question: "Berdasarkan Konvensi London (1814), wilayah Hindia Belanda dikembalikan oleh Inggris kepada pihak...",
+                options: ["Prancis", "Inggris", "Belanda", "Spanyol", "Portugal"],
+                correct: 2,
+                explanation: "Konvensi London menyepakati pengembalian tanah jajahan Nusantara kepada Belanda pasca-Perang Napoleonis."
+            },
+            {
+                question: "Sistem Tanam Paksa (Cultuurstelsel) yang diberlakukan sejak tahun 1830 dicetuskan oleh...",
+                options: ["Johannes van den Bosch", "Herman Willem Daendels", "Van der Capellen", "J.C. Baud", "C.Th. van Deventer"],
+                correct: 0,
+                explanation: "Johannes van den Bosch merancang Tanam Paksa untuk mengatasi krisis keuangan kas negara Belanda."
+            },
+            {
+                question: "Ketentuan pokok Tanam Paksa mewajibkan petani menyediakan sebagian tanahnya untuk ditanami komoditas ekspor seperti...",
+                options: ["Padi dan Jagung", "Kopi, Tebu, Nila (Nila/Indigo), dan Tembakau", "Lada dan Cengkih saja", "Karet dan Kelapa Sawit", "Kapas dan Sutra"],
+                correct: 1,
+                explanation: "Kopi, tebu, dan nila merupakan komoditas ekspor bernilai sangat tinggi di pasaran Eropa."
+            },
+            {
+                question: "Kritik tajam terhadap pelaksanaan sistem Tanam Paksa disuarakan oleh mantan pejabat kolonial lewat novel 'Max Havelaar' dengan nama pena Multatuli. Nama aslinya adalah...",
+                options: ["C.Th. van Deventer", "Eduard Douwes Dekker", "Baron van Hoëvell", "Fransen van de Putte", "J.H. Abendanon"],
+                correct: 1,
+                explanation: "Eduard Douwes Dekker memakai nama samaran Multatuli (artinya: 'aku sudah banyak menderita') dalam menulis novel Max Havelaar (1860)."
+            },
+            {
+                question: "Pemberlakuan Undang-Undang Agraria (Agrarische Wet) pada tahun 1870 di Hindia Belanda menandai dimulainya...",
+                options: ["Sistem Ekonomi Liberal (Masuknya Modal Swasta Asing)", "Penghapusan total seluruh pajak", "Pengembalian hak tanah kepada raja", "Sistem monopoli mutlak negara", "Pemisahan kekuasaan militer"],
+                correct: 0,
+                explanation: "Agrarische Wet 1870 membuka pintu bagi pengusaha swasta asing untuk menyewa tanah dan menanam modal di perkebunan."
+            },
+            {
+                question: "Politik Etis (Politik Balas Budi) yang dicetuskan pada akhir abad ke-19 dipelopori oleh gagasan tulisan...",
+                options: ["Multatuli", "C.Th. van Deventer ('Een Eereschuld')", "J.P. Coen", "Van der Capellen", "Snouck Hurgronje"],
+                correct: 1,
+                explanation: "Conrad Theodor van Deventer menulis artikel 'Een Eereschuld' (Utang Kehormatan) tahun 1899 di majalah De Gids."
+            },
+            {
+                question: "Program utama Politik Etis yang dirumuskan oleh Van Deventer meliputi tiga pilar, yaitu...",
+                options: ["Imigrasi, Transmigrasi, Urbanisasi", "Edukasi, Irigasi, Emigrasi", "Ekonomi, Politik, Pertahanan", "Eksplorasi, Eksploitasi, Emansipasi", "Elektrifikasi, Industrialisasi, Transportasi"],
+                correct: 1,
+                explanation: "Trias Van Deventer mencakup Edukasi (pendidikan), Irigasi (pengairan), dan Emigrasi (transmigrasi/pemindahan penduduk)."
+            },
+            {
+                question: "Dampak tidak langsung namun paling krusial dari program Edukasi pada Politik Etis bagi perjuangan bangsa Indonesia adalah...",
+                options: ["Lahirnya golongan terpelajar/intelektual modern yang memelopori Pergerakan Nasional", "Terwujudnya kesejahteraan buruh tani secara merata", "Penghapusan sistem kasta", "Diterimanya bahasa pribumi di parlemen Belanda", "Pemberian kemerdekaan langsung oleh Belanda"],
+                correct: 0,
+                explanation: "Meskipun awalnya bertujuan mencetak pegawai berupah murah, pendidikan melahirkan elita terpelajar pendorong kebangkitan nasional."
+            },
+            {
+                question: "Perlawanan pertempuran rakyat Maluku menentang kembalinya kekuasaan kolonial Belanda di Saparua pada tahun 1817 dipimpin oleh...",
+                options: ["Kapitan Pattimura (Thomas Matulessy)", "Sultan Baabullah", "Pangeran Antasari", "Tuanku Imam Bonjol", "I Gusti Ketut Jelantik"],
+                correct: 0,
+                explanation: "Pattimura memimpin penyerbuan Benteng Duurstede di Saparua pada tahun 1817."
+            },
+            {
+                question: "Perang Padri (1821-1837) di Sumatra Barat dipimpin oleh tokoh perjuangan bernama...",
+                options: ["Tuanku Imam Bonjol", "Teuku Umar", "Pangeran Diponegoro", "Sultan Mahmud Badaruddin", "Cut Nyak Dien"],
+                correct: 0,
+                explanation: "Tuanku Imam Bonjol (Peto Syarif) memimpin Kaum Padri dan Kaum Adat bersatu melawan penjajahan Belanda."
+            },
+            {
+                question: "Penyebab khusus meletusnya Perang Jawa / Perang Diponegoro (1825-1830) adalah...",
+                options: ["Pemasangan patok jalan oleh Belanda yang menerabas makam leluhur Diponegoro di Tegalrejo", "Kenaikan pajak pasar", "Penangkapan Sultan Hamengkubuwono", "Penerapan Tanam Paksa di Yogyakarta", "Penutupan pesantren"],
+                correct: 0,
+                explanation: "Pemasangan patok secara sepihak di tanah tanah keramat leluhur Pangeran Diponegoro menjadi pemantik utama meletusnya perang."
+            },
+            {
+                question: "Strategi militer Belanda yang berhasil mempersempit ruang gerak pasukan Pangeran Diponegoro dalam Perang Jawa dinamakan...",
+                options: ["Benteng Stelsel", "Devide et Impera", "Blokade Laut", "Gencatan Senjata", "Perang Total"],
+                correct: 0,
+                explanation: "Jenderal de Kock menerapkan taktik Benteng Stelsel mendirikan benteng-benteng terhubung untuk mengepung pergerakan gerilya."
+            },
+            {
+                question: "Ulama perempuan dan pejuang tangguh yang memimpin perlawanan gerilya dalam Perang Aceh pasca gugurnya Teuku Umar adalah...",
+                options: ["Cut Nyak Dien", "Cut Meutia", "Laksamana Malahayati", "Nyi Ageng Serang", "R.A. Kartini"],
+                correct: 0,
+                explanation: "Cut Nyak Dien melanjutkan perang gerilya di hutan Aceh hingga usianya lanjut."
+            },
+            {
+                question: "Penasihat pemerintah kolonial Belanda yang memberikan saran masukan strategi penumpasan Perang Aceh melalui studi Islam adalah...",
+                options: ["Dr. C. Snouck Hurgronje", "C.Th. van Deventer", "H.W. Daendels", "J.P. Coen", "Van den Bosch"],
+                correct: 0,
+                explanation: "Snouck Hurgronje (menyamar sebagai Abdul Ghaffar) menyarankan Belanda memisahkan kaum ulama dari kaum adat (Uleebalang)."
+            },
+            {
+                question: "Perang Banjar di Kalimantan Selatan (1859-1905) dipimpin oleh tokoh legendaris yang dianugerahi gelar Pahlawan Nasional, yaitu...",
+                options: ["Pangeran Antasari", "Sultan Suriansyah", "Pangeran Hidayatullah", "Kiai Demang Leman", "Sultan Adam"],
+                correct: 0,
+                explanation: "Pangeran Antasari memimpin perang rakyat Banjar menentang monopoli batu bara dan campur tangan takhta oleh Belanda."
+            },
+            {
+                question: "Tradisi perlawanan perang habis-habisan sampai titik darah penghabisan oleh pihak kerajaan di Bali melawan pencerobohan Belanda disebut...",
+                options: ["Puputan", "Sabilillah", "Perang Jagat", "Ngayah", "Margarana"],
+                correct: 0,
+                explanation: "Puputan adalah perang kehormatan hingga pembela terakhir gugur (seperti Puputan Jembrana, Badung, Klungkung)."
+            },
+            {
+                question: "Dampak sosial ekonomi dari munculnya perkebunan swasta asing di Sumatra (seperti Deli) adalah diberlakukannya hukum buruh ketat yaitu...",
+                options: ["Poenale Sanctie (Sanksi Pidana bagi Kuli Kontrak)", "Landrente", "Cultuurprocenten", "Verplichte Leverantie", "Hongi Stelsel"],
+                correct: 0,
+                explanation: "Poenale Sanctie memberi wewenang hukum bagi pemilik perkebunan untuk menghukum kuli kontrak yang melarikan diri."
+            },
+            {
+                question: "Proses transformasi ekonomi masyarakat pedesaan dari sistem barter ke penggunaan uang tunai sebagai alat bayar pajak dinamakan...",
+                options: ["Monetisasi Ekonomi", "Privatisasi", "Industrialisasi", "Kolektivisasi", "Nasionalisasi"],
+                correct: 0,
+                explanation: "Monetisasi mewajibkan transaksi dan pajak pembayaran tunai, memicu ketergantungan petani pada lintah darat/tengkulak."
+            },
+            {
+                question: "Pengaruh bahasa Eropa terhadap perkembangan bahasa Melayu/Indonesia terlihat pada penyerapan kata. Kata 'kantor' diserap dari bahasa...",
+                options: ["Belanda (Kantoor)", "Portugis", "Inggris", "Prancis", "Spanyol"],
+                correct: 0,
+                explanation: "Banyak istilah administratif seperti kantoor (kantor), korps, pabrik, dan gratis diserap dari bahasa Belanda."
+            },
+            {
+                question: "Organisasi pergerakan nasional modern pertama di Indonesia yang didirikan mahasiswa STOVIA pada 20 Mei 1908 adalah...",
+                options: ["Boedi Utomo", "Sarekat Islam", "Indische Partij", "Perhimpunan Indonesia", "PNI"],
+                correct: 0,
+                explanation: "Boedi Utomo didirikan oleh dr. Soetomo dan kawan-kawan atas ide Dr. Wahidin Soedirohoesodo."
+            },
+            {
+                question: "Ikrar kebangsaan pemuda Indonesia dari berbagai daerah pada tanggal 28 Oktober 1928 dikenal sebagai...",
+                options: ["Sumpah Pemuda", "Proklamasi", "Deklarasi Juanda", "Manifesto Politik", "Kongres Perempuan"],
+                correct: 0,
+                explanation: "Sumpah Pemuda mengikrarkan satu nusa, satu bangsa, dan satu bahasa: Indonesia."
+            },
+            {
+                question: "Kongsi dagang bentukan Inggris yang menjadi saingan berat VOC di Asia adalah...",
+                options: ["East India Company (EIC)", "VOC", "West India Company", "Royal African Company", "Hudson Bay Company"],
+                correct: 0,
+                explanation: "EIC (East India Company) adalah kongsi dagang asal Inggris."
+            },
+            {
+                question: "Sistem penyerahan wajib pajak berupa hasil bumi oleh daerah jajahan kepada VOC dinamakan...",
+                options: ["Contingenten", "Verplichte Leverantie", "Extirpasi", "Landrente", "Rodi"],
+                correct: 0,
+                explanation: "Contingenten adalah kewajiban penyerahan pajak hasil bumi langsung dari rakyat kepada VOC."
+            },
+            {
+                question: "Sistem wajib tanam kopi di wilayah Jawa Barat (Priangan) pada masa VOC disebut...",
+                options: ["Preangerstelsel", "Cultuurstelsel", "Landrente", "Agrarische Wet", "Cultuurprocenten"],
+                correct: 0,
+                explanation: "Preangerstelsel (1677-1871) membebani rakyat Priangan menanam kopi wajib."
+            },
+            {
+                question: "Menteri Jajahan Belanda yang memprakarsai pengesahan Undang-Undang Agraria 1870 adalah...",
+                options: ["de Waal (Engelbertus de Waal)", "van den Bosch", "Daendels", "Baud", "van Deventer"],
+                correct: 0,
+                explanation: "Menteri Engelbertus de Waal menyusun Agrarische Wet 1870 membuka privatisasi tanah."
+            },
+            {
+                question: "Pembukaan Terusan Suez pada tahun 1869 membawa pengaruh besar bagi Hindia Belanda berupa...",
+                options: ["Mempercepat waktu tempuh pelayaran Eropa-Asia dan memicu peningkatan pesat arus investasi & kapal uap", "Menutup jalur pelayaran Selat Malaka", "Menghentikan perdagangan ekspor", "Memutus komunikasi pos", "Memindahkan ibu kota kolonial"],
+                correct: 0,
+                explanation: "Terusan Suez mempersingkat rute Eropa-Nusantara, memacu pertumbuhan ekonomi perkebunan liberal."
+            },
+            {
+                question: "Pusat markas besar VOC pertama kali sebelum dipindahkan ke Batavia berkedudukan di...",
+                options: ["Ambon", "Banten", "Ternate", "Malaka", "Makassar"],
+                correct: 0,
+                explanation: "Gubernur Jenderal pertama Pieter Both menetapkan markas utama VOC di Ambon (Maluku) sebelum beralih ke Batavia."
+            },
+            {
+                question: "Perjanjian Bongaya (1667) memaksa Kesultanan Makassar tunduk pada monopoli VOC. Sultan Makassar saat itu adalah...",
+                options: ["Sultan Hasanuddin", "Sultan Alauddin", "Aru Palakka", "Sultan Ageng Tirtayasa", "Sultan Baabullah"],
+                correct: 0,
+                explanation: "Sultan Hasanuddin dipaksa menandatangani Perjanjian Bongaya setelah kekalahan akibat aliansi VOC dan Bone."
+            },
+            {
+                question: "Salah satu faktor utama yang menyulitkan perjuangan rakyat Indonesia menembus benteng pertahanan kolonial sebelum abad ke-20 adalah...",
+                options: ["Sifat perlawanan masih bersifat lokal, bergantung pada sosok pemimpin karismatik, dan mudah diadu domba", "Kurangnya pasokan rempah", "Tidak adanya pahlawan", "Jumlah penduduk terlalu sedikit", "Rakyat menyukai penjajah"],
+                correct: 0,
+                explanation: "Perlawanan pra-abad 20 bersifat kedaerahan (keparokialan) dan belum terikat kesadaran persatuan nasional."
+            },
+            {
+                question: "Pahlawan nasional yang memimpin pasukan Puputan Margarana di Bali menentang Belanda tahun 1946 adalah...",
+                options: ["I Gusti Ngurah Rai", "I Gusti Ketut Jelantik", "Ida Bagus Mantra", "Anak Agung Gde", "Cokorda Gde"],
+                correct: 0,
+                explanation: "I Gusti Ngurah Rai bersama pasukan Ciung Wanara gugur dalam pertempuran Puputan Margarana."
+            },
+            {
+                question: "Imperialisme modern dipicu oleh peristiwa besar di Eropa abad ke-18, yaitu...",
+                options: ["Revolusi Industri", "Revolusi Prancis", "Perang Dunia I", "Renaisans", "Reformasi Gereja"],
+                correct: 0,
+                explanation: "Revolusi Industri mendorong kebutuhan pasokan bahan mentah massal serta pasar komoditas olahan pabrik."
+            },
+            {
+                question: "Dampak positif pembangunan jaringan rel kereta api oleh kolonial bagi masyarakat pribumi di kemudian hari adalah...",
+                options: ["Integrasi sarana transportasi darat pengangkut barang dan penumpang di Jawa dan Sumatra", "Pengisolasian antar desa", "Hancurnya seluruh perkebunan", "Penghapusan angkutan jalan", "Pemberhentian produksi perdagangan"],
+                correct: 0,
+                explanation: "Rel kereta api kini diwarisi sebagai jaringan transportasi massal utama di Jawa dan Sumatra."
+            },
+            {
+                question: "Para pejabat birokrasi pribumi yang digaji dan menjadi perpanjangan tangan pemerintah kolonial disebut...",
+                options: ["Bupati Pangreh Praja (Binnenlands Bestuur)", "Zendeling", "Kontroler Swasta", "Kuli Kontrak", "Bupati Sultan"],
+                correct: 0,
+                explanation: "Struktur birokrasi menempatkan para raja/bupati sebagai Pangreh Praja bawahan pemerintah Binnenlands Bestuur."
+            },
+            {
+                question: "Lembaga dewan perwakilan rakyat semu bentukan pemerintah kolonial Belanda pada tahun 1918 dinamakan...",
+                options: ["Volksraad", "Raad van Indie", "Eerste Kamer", "Tweede Kamer", "Boedi Utomo"],
+                correct: 0,
+                explanation: "Volksraad (Dewan Rakyat) dibentuk 1918 sebagai wadah perwakilan terbatas bagi elit politik pribumi dan Eropa."
+            },
+            {
+                question: "Perjanjian Saragosa (1529) menetapkan garis batas penjelajahan yang mengharuskan bangsa Spanyol meninggalkan Maluku dan memusatkan kekuasaannya di...",
+                options: ["Filipina", "India", "Brasil", "Afrika Selatan", "Australia"],
+                correct: 0,
+                explanation: "Spanyol menyerahkan klaim Maluku kepada Portugis dan memusatkan koloninya di Filipina."
+            },
+            {
+                question: "Sultan Kesultanan Ternate yang berhasil mengusir bangsa Portugis keluar dari bumi Maluku pada tahun 1575 adalah...",
+                options: ["Sultan Baabullah", "Sultan Hairun", "Sultan Nuku", "Sultan Hasanuddin", "Sultan Mahmud"],
+                correct: 0,
+                explanation: "Sultan Baabullah memimpin pengepungan benteng Portugis (Nossa Senhora da Anunciada) setelah pembunuhan Sultan Hairun."
+            },
+            {
+                question: "Faktor utama kegagalan penyerangan pasukan Sultan Agung dari Mataram ke Batavia (1628 & 1629) adalah...",
+                options: ["Lumbung beras pasokan makanan dibakar oleh VOC dan terjangkit wabah penyakit", "Pasukan Mataram tidak membawa senjata", "Bantuan Banten tidak datang", "Benteng Batavia runtuh sendiri", "Terjadi gempa bumi besar"],
+                correct: 0,
+                explanation: "Siasat VOC membakar lumbung-lumbung persediaan beras Mataram di Karawang & Tegal menggagalkan penyerbuan."
+            },
+            {
+                question: "Penyimpangan aturan Tanam Paksa yang paling memberatkan rakyat petani di desa adalah...",
+                options: ["Luas tanah wajib melebihi 1/5 dan beban kerja melebihi waktu menanam padi", "Petani diberi imbalan uang melimpah", "Kegagalan panen ditanggung sepenuhnya oleh pemerintah", "Tanah yang dipakai adalah tanah tandus", "Petani dibebaskan dari segala pajak"],
+                correct: 0,
+                explanation: "Di lapangan, peabat lokal menuntut tanah paling subur melebihi batas 20% demi mengejar bonus insentif (cultuurprocenten)."
+            },
+            {
+                question: "Sekolah dasar pertama bagi anak-anak golongan Eropa di masa kolonial Belanda adalah...",
+                options: ["ELS (Europese Lagere School)", "HIS", "MULO", "HBS", "STOVIA"],
+                correct: 0,
+                explanation: "ELS diperuntukkan khusus bagi anak keturunan Eropa dan bangsawan tinggi pribumi."
+            },
+            {
+                question: "Sekolah Dokter Jawa di Batavia yang kelak menjadi tempat bersemainya para tokoh pendiri Boedi Utomo adalah...",
+                options: ["STOVIA", "NIAS", "RHS", "THS Bandung", "OSVIA"],
+                correct: 0,
+                explanation: "STOVIA (School tot Opleiding van Inlandsche Artsen) menjadi kawah candradimuka gerakan pemuda nasionalis."
+            },
+            {
+                question: "Penyebaran agama Kristen Protestan di wilayah Nusantara pada masa kolonial Belanda dilakukan oleh lembaga zendeling, sedangkan Kristen Katolik disebarkan oleh...",
+                options: ["Misionaris", "Padri", "Ulama", "Pastur Serikat", "Musafir"],
+                correct: 0,
+                explanation: "Penyebaran Katolik diusung oleh para Misionaris, terutama aktif di Flores, Timor, dan Maluku."
+            },
+            {
+                question: "Prinsip pemerintahan 'Indirect Rule' yang diterapkan pemerintah Belanda berarti...",
+                options: ["Pemerintahan dijalankan melalui perantara raja/penguasa lokal yang diawasi pejabat kolonial", "Rakyat memerintah secara langsung tanpa pejabat", "Pemerintahan dipimpin oleh militer murni", "Pemerintahan diserahkan kepada Inggris", "Tidak ada hukum formal"],
+                correct: 0,
+                explanation: "Indirect rule memanfaatkan penguasa tradisional yang disegani rakyat sebagai perpanjangan tangan kolonial."
+            },
+            {
+                question: "Gelar 'Ayam Jantan dari Timur' diberikan oleh Belanda kepada raja Makassar pemberani yaitu...",
+                options: ["Sultan Hasanuddin", "Sultan Alauddin", "Arung Palakka", "Sultan Baabullah", "Sultan Iskandar Muda"],
+                correct: 0,
+                explanation: "De Haantjes van het Oosten (Ayam Jantan dari Timur) diberikan karena kegigihan Sultan Hasanuddin menentang VOC."
+            },
+            {
+                question: "Dampak monetisasi terhadap kehidupan sosial petani di Jawa adalah maraknya praktik lintah darat atau sistem...",
+                options: ["Ijon (Tengkulak)", "Bagi Hasil Adil", "Koperasi Desa", "Subsidi Pertanian", "Lumbung Desa Bebas"],
+                correct: 0,
+                explanation: "Kebutuhan uang tunai mendesak memaksa petani menjual hasil panen sebelum waktunya (ijon) kepada tengkulak."
+            },
+            {
+                question: "Program emigrasi pada Politik Etis diarahkan pemerintah kolonial Belanda terutama untuk...",
+                options: ["Menyediakan tenaga kerja murah di perkebunan swasta luar Jawa (seperti Sumatra)", "Mensejahterakan petani miskin secara cuma-cuma", "Membangun armada militer di Kalimantan", "Membuka kawasan wisata baru", "Mengurangi angka kelahiran"],
+                correct: 0,
+                explanation: "Pemindahan penduduk dari Jawa dimanfaatkan untuk memenuhi pasokan buruh perkebunan di Sumatra."
+            },
+            {
+                question: "Gaya arsitektur bangunan perpaduan antara budaya Eropa Tropis dan arsitektur lokal pada bangunan kolonial disebut...",
+                options: ["Indies Empire Style (Gaya Indis)", "Gotik Klasik", "Barok Modern", "Minimalis", "Victoria"],
+                correct: 0,
+                explanation: "Gaya Indis menyesuaikan bangunan Eropa dengan iklim tropis seperti atap tinggi dan teras luar lebar."
+            },
+            {
+                question: "Sistem stratifikasi hukum sosial masyarakat di masa kolonial menempatkan rakyat pribumi pada lapisan...",
+                options: ["Paling bawah (Golongan Bumiputera/Inlander)", "Paling atas", "Setara dengan orang Eropa", "Lapisan menengah bersama Timur Asing", "Golongan teristimewa"],
+                correct: 0,
+                explanation: "Hukum membagi warga jadi 3 kelas: Eropa (atas), Timur Asing (menengah), dan Bumiputera (bawah)."
+            },
+            {
+                question: "Dampak psikologis jangka panjang dari imperialisme yang ditentang oleh para pendiri bangsa adalah munculnya mental...",
+                options: ["Inferioritas (Rasa Rendah Diri)", "Keberanian Berlebih", "Kemandirian Ekstrem", "Egoisme Kelompok", "Supremasi Kebudayaan"],
+                correct: 0,
+                explanation: "Diskriminasi kolonial yang panjang sempat menumbuhkan rasa inferioritas yang dikikis melalui gerakan kebangkitan nasional."
+            },
+            {
+                question: "Meskipun sempat diusir dari Banten, arti penting ekspedisi Cornelis de Houtman (1596) adalah...",
+                options: ["Membuka jalan pelayaran kapal-kapal dagang Belanda berikutnya menuju Nusantara", "Menguasai seluruh perdagangan rempah", "Menghancurkan benteng Portugis", "Mendirikan kota Batavia", "Menandatangani perjanjian dengan Mataram"],
+                correct: 0,
+                explanation: "Ekspedisi de Houtman membuktikan bahwa jalur pelayaran ke sumber rempah dapat ditempuh oleh Belanda."
+            },
+            {
+                question: "Bencana kelaparan dahsyat akibat penyimpangan Tanam Paksa tebu dan padi pernah melanda daerah Jawa pada tahun 1840-an, khususnya di...",
+                options: ["Grobogan dan Demak", "Surabaya dan Malang", "Batavia dan Banten", "Bandung dan Bogor", "Banyuwangi dan Jember"],
+                correct: 0,
+                explanation: "Kelaparan parah melanda Grobogan dan Demak akibat fokus lahan dan tenaga dikuras habis untuk tanaman ekspor."
+            },
+            {
+                question: "Badan peradilan masa kolonial yang khusus diperuntukkan bagi persidangan warga golongan pribumi adalah...",
+                options: ["Landraad", "Raad van Justitie", "Hooggerechtshof", "Pengadilan Agama", "Mahkamah Militer"],
+                correct: 0,
+                explanation: "Landraad merupakan pengadilan tingkat pertama bagi rakyat bumiputera."
+            },
+            {
+                question: "Tanaman pangan dari benua Amerika yang dibawa oleh penjelajah Spanyol & Portugis ke Nusantara antara lain...",
+                options: ["Jagung, Cabai, Kentang, dan Ubi Jalar", "Padi dan Gandum", "Cengkih dan Pala", "Kopi dan Teh", "Lada dan Serai"],
+                correct: 0,
+                explanation: "Pertukaran Kolumbia membawa komoditas Amerika seperti jagung, kentang, cabai, dan ubi ke Nusantara."
+            },
+            {
+                question: "Sifat kedudukan bupati dalam sistem Binnenlands Bestuur pemerintah kolonial adalah...",
+                options: ["Bawahan (bawahan pengawas/Resident Belanda) yang kehilangan kedaulatan politik otonomnya", "Raja berkuasa mutlak", "Mitra sejajar Ratu Belanda", "Ketua dewan independen", "Menteri luar negeri"],
+                correct: 0,
+                explanation: "Para bupati ditempatkan di bawah perintah langsung Assistent Resident / Resident Belanda."
+            },
+            {
+                question: "Asumsi dasar di balik penerapan Sistem Sewa Tanah oleh Raffles adalah...",
+                options: ["Seluruh tanah milik raja/pemerintah negara, sehingga rakyat penggarap adalah penyewa", "Tanah adalah milik pribadi petani sepenuhnya", "Tanah milik VOC yang bangkrut", "Tanah milik pihak swasta Inggris", "Tanah tidak boleh diperjualbelikan"],
+                correct: 0,
+                explanation: "Raffles menganggap raja (pemerintah) sebagai pemilik sah seluruh tanah, maka petani wajib membayar sewa (landrente)."
+            },
+            {
+                question: "Riset etnografi dan dokumentasi sejarah Nusantara tulisan Thomas Stamford Raffles dibukukan dalam karya monumentalnya berjudul...",
+                options: ["History of Java", "Max Havelaar", "Een Eereschuld", "Suma Oriental", "Desawarnana"],
+                correct: 0,
+                explanation: "Raffles menulis karya ilmiah dua jilid berjudul 'History of Java' yang terbit pada tahun 1817."
+            },
+            {
+                question: "Perbedaan mendasar antara Imperialisme Kuno dan Imperialisme Modern terletak pada...",
+                options: ["Motif utama: Kuno (Semboyan 3G/Rempah), Modern (Bahan baku industri & pasar hasil pabrik)", "Penggunaan kapal pelayaran", "Keterlibatan negara Eropa", "Lokasi penjajahan", "Peran tokoh agama"],
+                correct: 0,
+                explanation: "Imperialisme Kuno dipacu oleh merkantilisme (3G), sedangkan Imperialisme Modern dipacu oleh Revolusi Industri."
+            },
+            {
+                question: "Jalur Pos Raya (Grote Postweg) dibangun Daendels membelah Pulau Jawa dari ujung barat hingga ujung timur, tepatnya dari...",
+                options: ["Anyer hingga Panarukan", "Jakarta hingga Surabaya", "Merak hingga Banyuwangi", "Banten hingga Bali", "Cirebon hingga Cilacap"],
+                correct: 0,
+                explanation: "Jalan raya membentang sepanjang 1.000 km dari Anyer (Banten) hingga Panarukan (Jawa Timur)."
+            },
+            {
+                question: "Undang-Undang Gula (Suiker Wet 1870) yang diundangkan bersama Agrarische Wet bertujuan untuk...",
+                options: ["Menghapus secara bertahap monopoli penanaman tebu oleh pemerintah dan menyerahkannya ke swasta", "Wajib tanam tebu ditingkatkan 2 kali lipat oleh negara", "Melarang penjualan gula ke Eropa", "Menutup seluruh pabrik gula", "Memberikan gula gratis pada petani"],
+                correct: 0,
+                explanation: "Suiker Wet membuka industri pemrosesan gula Jawa bagi investor swasta."
+            },
+            {
+                question: "Perubahan strategi perjuangan bangsa Indonesia sejak abad ke-20 ditandai oleh...",
+                options: ["Penggunaan organisasi modern, diplomasi, media pers, dan wawasan kesatuan nasional", "Perang fisik kedaerahan secara tertutup", "Ketergantungan pada pangeran kerajaan", "Penyelundupan senjata tradisional", "Pengusiran warga Eropa secara paksa"],
+                correct: 0,
+                explanation: "Pergerakan Nasional menggunakan organisasi terstruktur, kesadaran kebangsaan, dan jalur politik formal."
+            },
+            {
+                question: "Bonus persentase keuntungan yang diberikan Belanda kepada pejabat birokrasi yang berhasil mengumpulkan hasil Tanam Paksa melampaui target disebut...",
+                options: ["Cultuurprocenten", "Poenale Sanctie", "Extirpasi", "Landrente", "Contingenten"],
+                correct: 0,
+                explanation: "Cultuurprocenten mendorong pejabat lokal memeras rakyat demi mengejar bonus insentif pribadi."
+            },
+            {
+                question: "Makna terpenting mempelajari sejarah perkembangan kolonialisme dan imperialisme bagi generasi muda Indonesia adalah...",
+                options: ["Memahami dinamika sejarah bangsa untuk memperkokoh rasa persatuan, kedaulatan, dan kebangsaan", "Menumbuhkan kebencian masa lalu", "Menolak hubungan internasional", "Mengembalikan sistem feodalisme", "Menginginkan penjajahan kembali"],
+                correct: 0,
+                explanation: "Pembelajaran sejarah membina kesadaran kritis, reflektif, dan memperkuat jiwa nasionalisme mempertahankan NKRI."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let preparedQuizData = [];
+
+        function prepareQuizData() {
+            preparedQuizData = quizData.map((q) => {
+                const optionsWithIndex = q.options.map((opt, idx) => ({ text: opt, originalIndex: idx }));
+                for (let i = optionsWithIndex.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [optionsWithIndex[i], optionsWithIndex[j]] = [optionsWithIndex[j], optionsWithIndex[i]];
+                }
+                const newCorrectIndex = optionsWithIndex.findIndex(opt => opt.originalIndex === q.correct);
+                return {
+                    question: q.question,
+                    options: optionsWithIndex.map(o => o.text),
+                    correct: newCorrectIndex,
+                    explanation: q.explanation
+                };
+            });
+        }
+
+        function startQuiz() {
+            prepareQuizData();
+            currentQuestionIndex = 0;
+            userAnswers.fill(null);
+
+            document.getElementById('view-welcome').classList.add('hidden');
+            document.getElementById('view-result').classList.add('hidden');
+            document.getElementById('view-quiz').classList.remove('hidden');
+            document.getElementById('quiz-status-header').classList.remove('hidden');
+            document.getElementById('total-q-num').innerText = preparedQuizData.length;
+
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = preparedQuizData[currentQuestionIndex];
+            document.getElementById('current-q-num').innerText = currentQuestionIndex + 1;
+            document.getElementById('q-number-label').innerText = currentQuestionIndex + 1;
+            document.getElementById('question-text').innerText = q.question;
+            
+            // Progress Bar
+            const progress = ((currentQuestionIndex + 1) / preparedQuizData.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+
+            // Tombol Navigasi Prev
+            const prevBtn = document.getElementById('prev-btn');
+            prevBtn.disabled = (currentQuestionIndex === 0);
+
+            // Tombol Navigasi Next / Selesai
+            const nextBtnText = document.getElementById('next-btn-text');
+            if (currentQuestionIndex === preparedQuizData.length - 1) {
+                nextBtnText.innerText = "Lihat Hasil Akhir";
+            } else {
+                nextBtnText.innerText = "Selanjutnya";
+            }
+
+            // Opsi Jawaban
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const explanationBox = document.getElementById('explanation-box');
+            explanationBox.classList.add('hidden');
+
+            q.options.forEach((option, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-4 rounded-lg border border-stone-300 bg-white hover:bg-amber-50 hover:border-amber-600 transition flex items-center space-x-3 text-stone-800 font-body`;
+                
+                const letterSpan = document.createElement('span');
+                letterSpan.className = 'font-heading font-bold text-amber-800 bg-amber-100 w-8 h-8 rounded-full flex items-center justify-center shrink-0';
+                letterSpan.innerText = String.fromCharCode(65 + idx);
+
+                const textSpan = document.createElement('span');
+                textSpan.innerText = option;
+                textSpan.className = 'flex-grow';
+
+                btn.appendChild(letterSpan);
+                btn.appendChild(textSpan);
+
+                // Jika soal ini sudah dijawab sebelumnya
+                if (userAnswers[currentQuestionIndex] !== null) {
+                    if (idx === q.correct) {
+                        btn.classList.add('bg-emerald-100', 'border-emerald-600', 'text-emerald-950', 'font-semibold');
+                    }
+                    if (idx === userAnswers[currentQuestionIndex] && idx !== q.correct) {
+                        btn.classList.add('bg-rose-100', 'border-rose-600', 'text-rose-950');
+                    }
+                }
+
+                btn.onclick = () => selectOption(idx);
+                optionsContainer.appendChild(btn);
+            });
+
+            if (userAnswers[currentQuestionIndex] !== null) {
+                showExplanation();
+            }
+        }
+
+        function selectOption(selectedIndex) {
+            userAnswers[currentQuestionIndex] = selectedIndex;
+            loadQuestion();
+        }
+
+        function showExplanation() {
+            const q = preparedQuizData[currentQuestionIndex];
+            document.getElementById('explanation-text').innerText = q.explanation;
+            document.getElementById('explanation-box').classList.remove('hidden');
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < preparedQuizData.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function confirmReset() {
+            if (confirm("Apakah Anda yakin ingin mengulang seluruh kuis dari awal? Jawaban Anda saat ini akan di-reset.")) {
+                startQuiz();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('view-quiz').classList.add('hidden');
+            document.getElementById('quiz-status-header').classList.add('hidden');
+            document.getElementById('view-result').classList.remove('hidden');
+
+            let correctCount = 0;
+            let wrongCount = 0;
+            let unansweredCount = 0;
+
+            preparedQuizData.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                if (userAns === null) {
+                    unansweredCount++;
+                } else if (userAns === q.correct) {
+                    correctCount++;
+                } else {
+                    wrongCount++;
+                }
+            });
+
+            document.getElementById('score-display').innerText = `${correctCount} / 80`;
+            document.getElementById('correct-count').innerText = correctCount;
+            document.getElementById('wrong-count').innerText = wrongCount;
+            document.getElementById('unanswered-count').innerText = unansweredCount;
+
+            const percentage = (correctCount / 80) * 100;
+            let msg = "";
+            if (percentage >= 85) {
+                msg = "Luar biasa! Analisis sejarah Anda sangat tajam. Anda memahami setiap babak kolonialisme, imperialisme, hingga dampaknya dengan sangat mendalam bagaikan seorang sejarawan sejati.";
+            } else if (percentage >= 60) {
+                msg = "Analisis yang baik. Anda memiliki pemahaman yang cukup solid mengenai dinamika kolonial dan perlawanan bangsa Indonesia di masa lalu. Terus tingkatkan penelaahan arsip sejarah!";
+            } else {
+                msg = "Hasil penelaahan menunjukkan masih banyak catatan sejarah yang perlu diulas kembali. Mari buka kembali lembaran masa lalu untuk memahami lebih utuh perjalanan bangsa Nusantara.";
+            }
+            document.getElementById('result-message').innerText = msg;
+        }
+    </script>
+</body>
+</html>
